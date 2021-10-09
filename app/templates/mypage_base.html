@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+    </head>
+
+    {# チーム名 #}
+    <div>
+        <form action="/set_team" method="post">
+            <input type="text" name="myteam_name" placeholder="チーム名を入力してね">
+            <button type="submit">マイチーム名設定</button>
+        </form>
+        {{myteam_name}}
+    </div>
+    
+    <a href="/">ホーム</a>
+    <a href="/mypage">マイページ</a> 
+
+    {# タスク追加 #}
+    <form action="/add" method="post">
+        <input type="text" name="content" placeholder="content">
+        <textarea name="detail" placeholder="detail"></textarea>
+        <button type="submit">Add</button>
+    </form>
+
+    {# ネクストタスク #}
+    {{rate}}
+    {% if session["next_task"] %}
+    {# 完了ボタン #}
+    <form action="/done" method="post">
+        <button type="submit" name="done_task_id" value="{{user_tasks.filter_by(id=session["next_task"]).first().id}}">Done</button>
+    </form>
+    {# 編集 #}
+    <form action="/edit" method="post">
+        <input type="text" name="content" placeholder="content" value="{{user_tasks.filter_by(id=session["next_task"]).first().content}}">
+        <textarea name="detail">{{user_tasks.filter_by(id=session["next_task"]).first().detail}}</textarea>
+        <button type="submit" name="edit_task_id" value="{{user_tasks.filter_by(id=session["next_task"]).first().id}}">Edit</button>
+    </form>
+    {# 表示 #}
+    <div>
+        {{user_tasks.filter_by(id=session["next_task"]).first().content}}: {{user_tasks.filter_by(id=session["next_task"]).first().detail}}
+    </div>
+    {% endif %}
+
+    {# 切り替え #}
+    <form action="/mypage/switch" method="post">
+        <button type="submit" name="switch" value='0'>やることリスト</button>
+        <button type="submit" name="switch" value='1'>終わったことリスト</button>
+    </form>
+    
+    {% block content %}
+    {% endblock %}
+
+    {# タスク一覧ここまで #}
+
+    </body>
+</html>

@@ -29,7 +29,7 @@ class Task(Base):
     completed = Column(Boolean, default=False)
     user_id = Column(Integer, ForeignKey('users.id'))
 
-    user = relationship("User", backref=backref('tasks', order_by=id))
+    user = relationship("User", backref=backref('tasks', order_by=id), cascade="delete")
 
     def __init__(self, content, detail, user_id):
         self.content = content

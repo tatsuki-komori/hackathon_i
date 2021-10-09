@@ -1,0 +1,22 @@
+{% extends "mypage_base.html" %}
+
+{% block content %}
+{% for task in user_tasks.filter_by(completed=False) %}
+{% if task.id != session["next_task"] %}
+{# 完了ボタン #}
+<form action="/done" method="post">
+    <button type="submit" name="done_task_id" value="{{task.id}}">Done</button>
+</form>
+{# 編集 #}
+<form action="/edit" method="post">
+    <input type="text" name="content" placeholder="content" value="{{task.content}}">
+    <textarea name="detail">{{task.detail}}</textarea>
+    <button type="submit" name="edit_task_id" value="{{task.id}}">Edit</button>
+</form>
+{# 表示 #}
+<div>
+    {{task.content}}: {{task.detail}}
+</div>
+{% endif %}
+{% endfor %}
+{% endblock %}

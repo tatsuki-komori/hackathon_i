@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+    </head>
+    
+    <body>
+    <a href="/logout">ログアウトする</a>
+    <div>{{name}}でログインなう</div>
+
+    {# タスク追加 #}
+    <form action="/add" method="post">
+        <input type="text" name="content" placeholder="content">
+        <textarea name="detail" placeholder="detail"></textarea>
+        <button type="submit">Add</button>
+    </form>
+
+    {# タスク一覧 #}
+    {% for task in user_tasks %}
+
+    {# 完了ボタン #}
+    <form action="/done" method="post">
+        <button type="submit" name="done_task_id" value="{{task.id}}">Done</button>
+    </form>
+    {# 編集 #}
+    <form action="/edit" method="post">
+        <input type="text" name="content" placeholder="content" value="{{task.content}}">
+        <textarea name="detail">{{task.detail}}</textarea>
+        <button type="submit" name="edit_task_id" value="{{task.id}}">Edit</button>
+    </form>
+    {# 表示 #}
+    {% if task.completed %}
+    <div style="color: #00ff00">
+        {{task.content}}: {{task.detail}}
+    </div>
+    {% else %}
+    <div>
+        {{task.content}}: {{task.detail}}
+    </div>
+    {% endif %}
+
+    {% endfor %}
+    {# タスク一覧ここまで #}
+
+    {# タイムライン #}
+    <div style="margin: 3em; border: 1px solid #000">
+        {% for task in all_tasks %}
+        {{task.content}}: {{task.detail}}
+        {% endfor %}
+    </div>
+    </body>
+</html>

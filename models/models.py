@@ -11,12 +11,14 @@ class User(Base):
     hashed_password = Column(String(128), nullable=False)
     menter_id = Column(Integer, nullable=False)
     team_name = Column(String(128))
+    goal = Column(Text)
 
     def __init__(self, user_name, hashed_password, menter_id):
         self.user_name = user_name
         self.hashed_password = hashed_password
         self.menter_id = menter_id
         self.team_name = ''
+        self.goal = ''
 
     def __repr__(self):
         return '<Name %r>' % (self.user_name)
@@ -28,13 +30,17 @@ class Task(Base):
     detail = Column(Text)
     completed = Column(Boolean, default=False)
     user_id = Column(Integer, ForeignKey('users.id'))
+    next_flag = Column(Boolean, default=False)
+    done_datetime = Column(DateTime)
+    user_name = Column(String(128))
 
     user = relationship("User", backref=backref('tasks', order_by=id), cascade="delete")
 
-    def __init__(self, content, detail, user_id):
+    def __init__(self, content, detail, user_id, user_name):
         self.content = content
         self.detail = detail
         self.user_id = user_id
+        self.user_name = user_name
     
     def __repr__(self):
         return '<Task %r>' % self.content

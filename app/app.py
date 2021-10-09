@@ -11,12 +11,12 @@ app.secret_key = key.SECRET_KEY
 
 @app.route("/")
 def index():
-    if "user_id" in session:
+    if "user_id" in session and User.query.get(session["user_id"]):
 
         if "team_name" in session:
-            all_tasks = Task.query.filter_by(completed=True).outerjoin(User, User.id == Task.user_id).filter(User.team_name == session["team_name"]).order_by(Task.id.desc())
+            all_tasks = Task.query.filter_by(completed=True).outerjoin(User, User.id == Task.user_id).filter(User.team_name == session["team_name"]).order_by(Task.done_datetime.desc())
         else:
-            all_tasks = Task.query.filter_by(completed=True).order_by(Task.id.desc())
+            all_tasks = Task.query.filter_by(completed=True).order_by(Task.done_datetime.desc())
         
         user_id = session["user_id"]
         user = User.query.get(user_id)
@@ -31,12 +31,10 @@ def index():
 def mypage():
     user_id = session["user_id"]
     user = User.query.get(user_id)
+    goal = user.goal
     name = user.user_name
     myteam_name = user.team_name
     user_tasks = Task.query.filter_by(user_id=user_id)
-
-    if not ("next_task" in session) and (user_tasks.filter_by(completed=False).count() != 0):
-        session["next_task"] = user_tasks.filter_by(completed=False).first().id
 
     if user_tasks.count() != 0:
         rate = user_tasks.filter_by(completed=True).count() / user_tasks.count()
@@ -44,9 +42,9 @@ def mypage():
         rate = 0.0
 
     if "display_task" in session and session["display_task"] == '1':
-        return render_template("mypage_done.html", name=name, user_tasks=user_tasks, rate=rate, myteam_name=myteam_name)
+        return render_template("mypage_done.html", name=name, goal=goal, user_tasks=user_tasks, rate=rate, myteam_name=myteam_name)
     else:
-        return render_template("mypage_tasks.html", name=name, user_tasks=user_tasks, rate=rate, myteam_name=myteam_name)
+        return render_template("mypage_tasks.html", name=name, goal=goal, user_tasks=user_tasks, rate=rate, myteam_name=myteam_name)
 
 @app.route("/mypage/switch", methods=["post"])
 def switch():
@@ -108,16 +106,23 @@ def logout():
 def add():
     content = request.form["content"]
     detail = request.form["detail"]
-    task = Task(content, detail, session["user_id"])
+    task = Task(content, detail, session["user_id"], User.query.get(session["user_id"]).user_name)
+    if Task.query.filter_by(user_id=session["user_id"]).count() == 0:
+        task.next_flag = True
     db_session.add(task)
     db_session.commit()
     return redirect(url_for("mypage"))
 
 @app.route("/done", methods=["post"])
 def complete():
-    session.pop("next_task", None)
-    task = Task.query.filter_by(id=request.form["done_task_id"]).first()
+    task_id = request.form["done_task_id"]
+    task = Task.query.filter_by(id=task_id).first()
     task.completed = True
+    task.next_flag = False
+    task.done_datetime = datetime.now()
+    rest_task = Task.query.filter_by(user_id=session["user_id"]).filter_by(completed=False).filter_by(next_flag=False)
+    if rest_task.count() != 0:
+        rest_task.order_by(Task.id.asc()).first().next_flag = True
     db_session.commit()
     
     return redirect(url_for("mypage"))
@@ -147,6 +152,22 @@ def filter_team():
     else:
         session["team_name"] = team_name
     return redirect(url_for("index"))
+
+@app.route("/mypage/this_is_next", methods=["post"])
+def this_is_next():
+    user_id = session["user_id"]
+    for task in Task.query.filter_by(user_id=user_id).filter_by(next_flag=True):
+        task.next_flag = False
+    Task.query.get(request.form["this_is_next"]).next_flag = True
+    db_session.commit()
+    return redirect(url_for("mypage"))
+
+@app.route("/mypage/add_goal", methods=["post"])
+def add_goal():
+    user = User.query.get(session["user_id"])
+    user.goal = request.form["add_goal"]
+    db_session.commit()
+    return redirect(url_for("mypage"))
 
 if __name__ == "__main__":
     app.run(debug=True)

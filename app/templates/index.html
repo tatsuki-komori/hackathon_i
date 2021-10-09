@@ -21,7 +21,7 @@
         {# 一覧表示 #}
         {% for task in all_tasks %}
         <div>
-            {{task.content}}: {{task.detail}}
+            {{task.user_name}}: {{task.content}}: {{task.detail}}: {{task.done_datetime}}
         </div>
         {% endfor %}
     </div>

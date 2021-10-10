@@ -1,64 +1,124 @@
 <!DOCTYPE html>
-<html>
-    <head>
+<html lang="ja">
+  <head>
+    <title>MyPage</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href=" ./static/css/home.css">
+    <link rel="stylesheet" href=" ./static/css/mypage.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  </head>
 
-    </head>
+  <!-- ナビゲーションバー -->
+  <header>
+    <ul class="header_wrapper">
+        <a href="/">ホーム</a>
+        <a href="/mypage">マイページ</a>
+        <a href="/logout">ログアウトする</a>
+    </ul>
+    <div class="account_name">{{name}}でログイン中</div>
+    </div>
 
-    {# チーム名 #}
-    <div>
-        <form action="/set_team" method="post">
-            <input type="text" name="myteam_name" placeholder="チーム名を入力してね">
-            <button type="submit">マイチーム名設定</button>
-        </form>
-        {{myteam_name}}
+  </header>
+
+  <body>
+
+    <!-- ヘッダー分の余白 -->
+    <div class="space"></div>
+    <div class="wrapper">
+      <div class="graph">
+        <!-- 円グラフ -->
+        <div class="chart-box">
+          <canvas id="myChart">
+
+          </canvas>
+        </div>
+        <div class="flex">
+          <!-- ゴール -->
+          <div class="goal">
+            <div class="goal_text"><h2>GOAL<h2></div>
+            {# ゴール #}
+            
+            <div class="modal_layout">
+              <div class="text">
+                {{goal}}
+              </div>
+
+              {# モーダルウィンドウ(ゴール) #}
+              <div class="me-0 ms-0"><button value="#add_goal" class="modal-open">ゴールを設定</button></div>
+              
+              <div id="add_goal" class="modal-content">
+                  <form action="/mypage/add_goal" method="post" class="modal_flex">
+                      <p><input type="text" name="add_goal" value="{{goal}}" class="goal_form"></p>
+                      <p><button type="submit">送信</button></p>
+                  </form>
+              </div>
+            </div>
+
+          </div>
+          <div class="next">
+            <h2>NEXT</h2>
+            {% if user_tasks.filter_by(completed=False).count() != 0 %}
+            {# 編集 #}
+            <form action="/edit" method="post">
+                <input type="text" name="content" placeholder="content" value="{{user_tasks.filter_by(next_flag=True).first().content}}">
+                <textarea name="detail">{{user_tasks.filter_by(next_flag=True).first().detail}}</textarea>
+                <button type="submit" name="edit_task_id" value="{{user_tasks.filter_by(next_flag=True).first().id}}">Edit</button>
+            </form>
+            {# 表示 #}
+            <div>
+                {{user_tasks.filter_by(next_flag=True).first().content}}: {{user_tasks.filter_by(next_flag=True).first().detail}}
+            </div>
+            {# 完了ボタン #}
+            <form action="/done" method="post">
+                <button type="submit" name="done_task_id" value="{{user_tasks.filter_by(next_flag=True).first().id}}">Done</button>
+            </form>
+            {% endif %}
+          </div>
+        </div>
+      </div>  
+
+      <section class="tab_menu">
+        <form id="switch" action="/mypage/switch" method="post"></form>
+        <ul class="tab">
+          <button type="submit" name="switch" value='0' form="switch" class="modal-open">やることリスト</button>
+          <button type="submit" name="switch" value='1' form="switch" class="modal-open">終わったことリスト</button>
+          <button value="#add_task" class="modal-open">タスクを追加</button>  
+        </ul>
+        
+        {# モーダルウィンドウ(タスク追加) #}
+        <div id="add_task" class="modal-content" >
+            <form action="/mypage/add" method="post">
+                <p><input type="text" name="content" placeholder="content"></p>
+                <p><textarea name="detail" placeholder="detail"></textarea></p>
+                <button type="submit">Add</button>
+            </form>
+        </div>
+
+        {# mypage_tasksかmypage_doneを埋め込み #}
+        <div >
+        {% block content %}
+        {% endblock %}
+        </div>
+      </section>
+
     </div>
     
-    <a href="/">ホーム</a>
-    <a href="/mypage">マイページ</a> 
-
-    {# ゴール #}
-    {{goal}}
-    <form action="/mypage/add_goal" method="post">
-        <input type="text" name="add_goal" value="{{goal}}">
-        <button type="submit">送信</button>
-    </form>
-
-    {# タスク追加 #}
-    <form action="/add" method="post">
-        <input type="text" name="content" placeholder="content">
-        <textarea name="detail" placeholder="detail"></textarea>
-        <button type="submit">Add</button>
-    </form>
-
-    {# ネクストタスク #}
-    {{rate}}
-    {% if user_tasks.filter_by(completed=False).count() != 0 %}
-    {# 完了ボタン #}
-    <form action="/done" method="post">
-        <button type="submit" name="done_task_id" value="{{user_tasks.filter_by(next_flag=True).first().id}}">Done</button>
-    </form>
-    {# 編集 #}
-    <form action="/edit" method="post">
-        <input type="text" name="content" placeholder="content" value="{{user_tasks.filter_by(next_flag=True).first().content}}">
-        <textarea name="detail">{{user_tasks.filter_by(next_flag=True).first().detail}}</textarea>
-        <button type="submit" name="edit_task_id" value="{{user_tasks.filter_by(next_flag=True).first().id}}">Edit</button>
-    </form>
-    {# 表示 #}
-    <div>
-        {{user_tasks.filter_by(next_flag=True).first().content}}: {{user_tasks.filter_by(next_flag=True).first().detail}}
-    </div>
-    {% endif %}
-
-    {# 切り替え #}
-    <form action="/mypage/switch" method="post">
-        <button type="submit" name="switch" value='0'>やることリスト</button>
-        <button type="submit" name="switch" value='1'>終わったことリスト</button>
-    </form>
-    
-    {% block content %}
-    {% endblock %}
-
-    {# タスク一覧ここまで #}
-
-    </body>
+    <script src="./static/js/chart.min.js"></script>
+      <script>
+        var done = parseInt({{rate}} * 100, 10);
+        var notdone = 100 - done;
+        var ctx=document.getElementById('myChart');
+        var myDoughnutChart=new Chart(ctx,{
+          type:'doughnut',
+          data: {
+            labels:["達成","未達成"],
+            datasets:[{
+              data:[done,notdone],
+              backgroundColor:["#ee7b7b","#777"]
+            }]
+          }
+        });
+      </script>
+      <script src="./static/js/style.js"></script>
+  </body>
 </html>

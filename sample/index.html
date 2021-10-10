@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <title>Toppage</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--==============レイアウトを制御する独自のCSSを読み込み===============-->
+    <link rel="stylesheet" type="text/css"
+        href="https://coco-factory.jp/ugokuweb/wp-content/themes/ugokuweb/data/reset.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css">
+    <link rel="stylesheet" href=" ./static/css/style.css">
+    </head>
+
+    <header>
+        <ul class="header_wrapper">
+            <a href="/">ホーム</a>
+            <a href="/mypage">マイページ</a>
+            {{myteam_name}}
+            <button value="#set_filter" class="modal-open"><img class="icon-person" src="./static/img/icon-person.png" alt=""></button>
+        </ul>
+        
+        
+
+    </header>
+    
+    <body>
+    {# モーダルウィンドウ #}
+    <div id="set_filter" class="set_filter_window" style="height: 30vh; width: 20vh; background-color: #fff; padding-top: 20px">
+        <div>
+            <form action="/filter_team" method="post">
+                <p style="border-bottom: 1px solid #000; margin-bottom: 5px"><input type="text" name="filter_team" placeholder="チーム名を入力"></p>
+                <p><button type="submit">フィルタリング</button></p>
+            </form>
+        </div>
+        {# チーム名 #}
+        <div style="margin-top: 10px">
+            <form action="/set_team" method="post">
+                <input type="text" name="myteam_name" placeholder="チーム名を入力してね" style="border-bottom: 1px solid #000;">
+                <button type="submit">チーム名設定</button>
+            </form>            
+        </div>
+        <p style="border-top: 1px solid #999; padding-top: 10px; margin-top: 10px">{{name}}</p>
+        <p style="margin-top: 20px"><a href="/logout">ログアウトする</a></p>
+    </div>
+
+    <div class="space"></div>
+    <!-- スライドショーとTLを横並びにする -->
+    <div class="home-flex">
+        <!-- スライドショー -->
+        <div class="section-slider">
+            <div class="slider">
+                <img class="slider-item" src="./static/img/menter1.jpg" alt="">
+                <img class="slider-item" src="./static/img/menter2.jpg" alt="">
+                <img class="slider-item" src="./static/img/menter3.jpg" alt="">
+                <img class="slider-item" src="./static/img/menter4.jpg" alt="">
+            </div>
+        </div>
+
+        <!--  TL -->
+        <div class="section-timeline">
+            <div class="tweet-container">
+                {% for task in all_tasks %}
+                <div class="tweet-box">
+                    <img class="done-rebbon" src="./static/img/done-rebbon.png" alt="">
+                    <div class="timeline-flex">
+                        <div class="icon">
+                            <img class="icon-person" src="./static/img/icon-person.png" alt="">
+                        </div>
+                        <div>
+                            <p class="name">{{task.user_name}}</p>
+                            <p class="detail">{{task.detail}}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>        
+
+    <!--  スライドショーのjs -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+    <script src="./static/js/slider.js"></script>
+    <script src="./static/js/style.js"></script>
+
+    </body>
+</html>

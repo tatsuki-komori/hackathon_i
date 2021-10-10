@@ -102,7 +102,7 @@ def logout():
     session.pop("display_task", None)
     return redirect(url_for("top",status="logout"))
 
-@app.route("/add", methods=["post"])
+@app.route("/mypage/add", methods=["post"])
 def add():
     content = request.form["content"]
     detail = request.form["detail"]

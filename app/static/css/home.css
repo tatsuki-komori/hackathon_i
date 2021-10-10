@@ -1,0 +1,328 @@
+
+@charset "utf-8";
+
+*{
+  overflow: hidden;
+}
+
+.wrapper{
+  height: 100%;
+}
+
+header{
+  padding-top: 20px;
+  overflow: hidden;
+  background: #fefefe;
+  position: fixed;
+  top: 0px;
+  width: 100%;
+  height:60px;
+  z-index: 4;
+  display: flex;
+  justify-content: space-between;
+}
+
+.space{
+  height: 80px;
+}
+
+.header_wrapper li{
+  float: left;
+  list-style-type: none;
+  font-family: 'Avenir',sans-serif;
+  font-weight: 400;
+  letter-spacing: 5px;
+}
+.header_wrapper ul a{
+  text-decoration: none;
+  color: #555;
+  display: block;
+  transition: 0.3s;
+  font-size: 25px;
+  position: relative;
+  padding-top: 10px;
+  margin-left: 60px;
+  margin: 0 20px;
+}
+
+.account_name{
+  color: #555;
+  font-size: 20px;
+  position: relative;
+  margin-right: 70px;
+  margin-top: 10px;
+} 
+
+.header_wrapper li a:hover::after {
+  transform: scale(1, 1);
+}
+
+
+/* のえるここから */
+
+/*==================================================
+スライダーのためのcss
+===================================*/
+.home-flex {
+  display: flex;
+}
+
+.section-slider{
+  height: 600px;
+  width: 300px;
+}
+
+.slider {
+  position: relative;
+  z-index: 1;
+  /*↑z-indexの値をh1のz-indexの値よりも小さくして背景に回す*/
+  height: 600px;
+  width: 300px;
+  position: fixed;
+}
+
+.slider img {
+  height: 600px;
+  width: 300px;
+  /* width: 388.22px;
+  height: 775px; */
+}
+
+.slider-item {
+  object-fit: cover;
+  width: 40vw;
+  height: 70vh;
+  border-radius: 30px;
+}
+
+/*矢印の設定*/
+
+.slick-prev,
+.slick-next {
+  position: absolute;
+  z-index: 3;
+  top: 42%;
+  cursor: pointer;
+  /*マウスカーソルを指マークに*/
+  outline: none;
+  /*クリックをしたら出てくる枠線を消す*/
+  border-top: 2px solid #fff;
+  /*矢印の色*/
+  border-right: 2px solid #fff;
+  /*矢印の色*/
+  height: 25px;
+  width: 25px;
+}
+
+.slick-prev {
+  /*戻る矢印の位置と形状*/
+  left: 2.5%;
+  transform: rotate(-135deg);
+}
+
+.slick-next {
+  /*次へ矢印の位置と形状*/
+  right: 2.5%;
+  transform: rotate(45deg);
+}
+
+/*ドットナビゲーションの設定*/
+
+.slick-dots {
+  position: relative;
+  z-index: 3;
+  text-align: center;
+  margin: -50px 0 0 0;
+  /*ドットの位置*/
+}
+
+.slick-dots li {
+  display: inline-block;
+  margin: 0 5px;
+}
+
+.slick-dots button {
+  color: transparent;
+  outline: none;
+  width: 8px;
+  /*ドットボタンのサイズ*/
+  height: 8px;
+  /*ドットボタンのサイズ*/
+  display: block;
+  border-radius: 50%;
+  background: #fff;
+  /*ドットボタンの色*/
+}
+
+.slick-dots .slick-active button {
+  background: #333;
+  /*ドットボタンの現在地表示の色*/
+}
+
+/******* tweet ******/
+.section-timeline{
+  width: 700px;
+}
+
+.tweet-container{
+    width: 700px;
+    display: flex;
+}
+.tweet-box{
+    width: 313px;
+    height: 199px;
+    justify-content: space-around;
+    border: #333;
+    background-color: aqua;
+    border-radius: 30px;
+}
+.time{
+}
+
+.name{
+}
+
+.detail{
+}
+
+.done-rebbon{
+  width: 141px;
+  height: 80px;
+  right: 0px;
+}
+
+/****** icon ******/
+.icon-person {
+  transform: translate(50%,50%);
+  top: 50%;
+  width: 70px;
+  height: 70px;
+}
+
+/* のえるここまで */
+
+
+.tab{
+  display: flex;
+  flex-wrap: wrap;
+  width:70vw;
+  margin-bottom: 30px;
+  margin-top: 0;
+}
+
+.tab li a{
+  display: block;
+  background:#fff;
+  margin:0 2px;
+  padding:20px 15px;
+}
+
+.tab button{
+  margin-right: 20px;
+  padding: 10px 35px;
+  height: 45px;
+  border-radius: 30px;
+}
+
+body{
+  background:#eee;
+}
+
+ul{
+  list-style:none;
+}
+
+a{
+  color:#555;
+  text-decoration: none;
+  margin: 0 20px;
+  padding-bottom: 20px;
+}
+
+a:hover{
+  border-bottom: #ea7070 solid 2px;
+}
+
+.tab_menu{
+  width:67vw;
+  margin:30px auto;
+    background:#fefefe;
+    color: #555;
+    border-radius: 20px;
+    padding: 3vw 3vh;
+}
+
+.area h2{
+  font-size:1.3rem;
+  margin:0 0 20px 10px;
+  color: #666;
+  padding-top: 20px;
+}
+
+.area li{
+  padding: 10px; 
+  border-bottom: 1px solid #ddd;
+}
+
+.graph{
+  display: flex;
+  justify-content: space-between;
+  width: 70vw;
+  margin: 0 auto;
+}
+
+.chart-box{
+  width: 18vw;
+  height: 260px;
+  padding: 30px;
+  background: #fefefe;
+  border-radius: 20px;
+  margin-top: 40px;
+}
+
+.goal{
+  height: 85px;
+  width: 43vw;
+  background-color: #fefefe;
+  border-radius: 15px;
+  margin-top: 40px;
+  padding-left: 30px;
+  padding-top: 10px;
+  color: #666;
+  display: flex;
+}
+
+
+
+.next{
+  height: 215px;
+  width: 43vw;
+  background-color: #fefefe;
+  border-radius: 20px;
+  margin-top: 29px;
+  padding-left: 30px;
+  color: #666;
+  height: 197px;
+  padding-top: 5px;
+}
+
+#modal-overlay{
+  z-index: 5;
+  position: fixed;
+  display: none ;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 120%;
+  background-color: rgba(0, 0, 0, 0.75);
+}
+
+.modal_layout{
+  display: flex;
+  justify-content: space-around;
+  width: 40vw;
+  padding-top: 15px;
+  height:40px;
+  display:table;
+  text-align:center;
+}
